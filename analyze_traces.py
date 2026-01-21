@@ -430,8 +430,8 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
                            total_txs: int, client_tx_count: int, error_count: int,
                            format_quirks: dict | None = None) -> str:
     """Generate a markdown report for a single client."""
-    lines = [f"# {client.upper()} - debug_traceTransaction Quirks Report\n"]
-    lines.append("## Summary\n")
+    lines = [f"# {client.upper()} - debug_traceTransaction Quirks Report\n\n"]
+    lines.append("## Summary\n\n")
     lines.append(f"- **Total transactions analyzed**: {total_txs:,}\n")
 
     if client_tx_count < total_txs:
@@ -448,7 +448,7 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
     # Missing keys
     if quirks["missing_keys"]:
         has_quirks = True
-        lines.append("\n## Missing Keys\n")
+        lines.append("\n## Missing Keys\n\n")
         lines.append(f"{client} omits these keys that other clients include:\n")
 
         # Sort by total occurrences across all opcodes
@@ -458,7 +458,7 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
         )
         for key, op_counts in sorted_keys:
             total = sum(op_counts.values())
-            lines.append(f"\n### `{key}` ({total:,} occurrences)\n")
+            lines.append(f"\n### `{key}` ({total:,} occurrences)\n\n")
             lines.append("| Opcode | Count |\n|--------|-------|\n")
             for op, count in sorted(op_counts.items(), key=lambda x: -x[1])[:15]:
                 lines.append(f"| {op} | {count:,} |\n")
@@ -466,7 +466,7 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
     # Extra keys
     if quirks["has_extra_keys"]:
         has_quirks = True
-        lines.append("\n## Extra Keys (Present When Others Omit)\n")
+        lines.append("\n## Extra Keys (Present When Others Omit)\n\n")
         lines.append(f"{client} includes these keys that other clients omit:\n")
 
         # Sort by total occurrences across all opcodes
@@ -476,7 +476,7 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
         )
         for key, op_counts in sorted_keys:
             total = sum(op_counts.values())
-            lines.append(f"\n### `{key}` ({total:,} occurrences)\n")
+            lines.append(f"\n### `{key}` ({total:,} occurrences)\n\n")
             lines.append("| Opcode | Count |\n|--------|-------|\n")
             for op, count in sorted(op_counts.items(), key=lambda x: -x[1])[:15]:
                 lines.append(f"| {op} | {count:,} |\n")
@@ -484,11 +484,11 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
     # Type mismatches
     if quirks["type_mismatches"]:
         has_quirks = True
-        lines.append("\n## Type Mismatches\n")
+        lines.append("\n## Type Mismatches\n\n")
         lines.append(f"{client} returns different types for these keys:\n")
         for key, mismatches in quirks["type_mismatches"].items():
             count = len(mismatches)
-            lines.append(f"\n### `{key}` ({count:,} occurrences)\n")
+            lines.append(f"\n### `{key}` ({count:,} occurrences)\n\n")
 
             # Show a few examples
             examples = mismatches[:3]
@@ -503,12 +503,12 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
     # Value mismatches
     if quirks["value_mismatches"]:
         has_quirks = True
-        lines.append("\n## Value Mismatches\n")
+        lines.append("\n## Value Mismatches\n\n")
         lines.append(f"{client} returns different values for these keys:\n")
 
         for key, mismatches in sorted(quirks["value_mismatches"].items(), key=lambda x: -len(x[1])):
             count = len(mismatches)
-            lines.append(f"\n### `{key}` ({count:,} occurrences)\n")
+            lines.append(f"\n### `{key}` ({count:,} occurrences)\n\n")
 
             # Show a few examples
             examples = mismatches[:3]
@@ -539,7 +539,7 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
     # Gas differences
     if quirks["gas_differences"]:
         has_quirks = True
-        lines.append("\n## Top-Level `gas` Differences\n")
+        lines.append("\n## Top-Level `gas` Differences\n\n")
         lines.append(f"{client} reports different gas values at the top level:\n")
         count = len(quirks["gas_differences"])
         lines.append(f"- **Occurrences**: {count}\n")
@@ -561,7 +561,7 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
     # Return value differences
     if quirks["return_value_differences"]:
         has_quirks = True
-        lines.append("\n## Top-Level `returnValue` Differences\n")
+        lines.append("\n## Top-Level `returnValue` Differences\n\n")
         lines.append(f"{client} formats returnValue differently:\n")
         count = len(quirks["return_value_differences"])
         lines.append(f"- **Occurrences**: {count}\n")
@@ -584,7 +584,7 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
     if quirks["structlog_count_outlier"]:
         has_quirks = True
         count = len(quirks["structlog_count_outlier"])
-        lines.append("\n## StructLog Count Mismatches\n")
+        lines.append("\n## StructLog Count Mismatches\n\n")
         lines.append(f"{client} returned a different number of structLog entries {count:,} times.\n")
 
         # Show up to 5 examples
@@ -612,7 +612,7 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
         if client in rv_by_client:
             has_format_quirks_for_client = True
             encodings = rv_by_client[client]
-            format_quirks_lines.append("### returnValue Encoding\n")
+            format_quirks_lines.append("### returnValue Encoding\n\n")
             format_quirks_lines.append("How empty return values are represented. These are semantically equivalent.\n\n")
             format_quirks_lines.append("| Format | Count |\n|--------|-------|\n")
             for fmt, cnt in sorted(encodings.items(), key=lambda x: -x[1]):
@@ -636,7 +636,7 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
         if client in mem_by_client:
             has_format_quirks_for_client = True
             formats = mem_by_client[client]
-            format_quirks_lines.append("### Memory Format\n")
+            format_quirks_lines.append("### Memory Format\n\n")
             format_quirks_lines.append("How memory words are formatted in structLogs.\n\n")
             format_quirks_lines.append("| Format | Count |\n|--------|-------|\n")
             for fmt, cnt in sorted(formats.items(), key=lambda x: -x[1]):
@@ -660,7 +660,7 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
         if client in stor_by_client:
             has_format_quirks_for_client = True
             formats = stor_by_client[client]
-            format_quirks_lines.append("### Storage Format\n")
+            format_quirks_lines.append("### Storage Format\n\n")
             format_quirks_lines.append("How storage keys and values are formatted. Clients differ in zero-padding.\n\n")
 
             # Categorize the formats
@@ -714,7 +714,7 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
         if client in opt_by_client:
             has_format_quirks_for_client = True
             fields = opt_by_client[client]
-            format_quirks_lines.append("### Optional Fields\n")
+            format_quirks_lines.append("### Optional Fields\n\n")
             format_quirks_lines.append("Fields this client includes that others may omit.\n\n")
 
             field_descriptions = {
@@ -727,7 +727,7 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
             # Show each field with its examples grouped together
             for field, cnt in sorted(fields.items(), key=lambda x: -x[1]):
                 desc = field_descriptions.get(field, "—")
-                format_quirks_lines.append(f"#### `{field}` ({cnt:,} occurrences)\n")
+                format_quirks_lines.append(f"#### `{field}` ({cnt:,} occurrences)\n\n")
                 format_quirks_lines.append(f"{desc}\n\n")
 
                 # Show examples for this specific field
@@ -741,7 +741,7 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
             format_quirks_lines.append("\n")
 
         if has_format_quirks_for_client:
-            lines.append("\n## Format Quirks (Not Bugs)\n")
+            lines.append("\n## Format Quirks (Not Bugs)\n\n")
             lines.append("These are formatting differences that don't affect trace correctness:\n\n")
             lines.extend(format_quirks_lines)
 
@@ -905,17 +905,17 @@ def main():
         print(f"  Written: {report_path}")
 
     # Generate overall summary report
-    summary_lines = ["# Ethereum Client debug_traceTransaction Comparison Summary\n"]
-    summary_lines.append("\nThis report compares `debug_traceTransaction` outputs across Ethereum execution clients to identify behavioral differences and formatting quirks.\n")
-    summary_lines.append("\n## Overview\n")
+    summary_lines = ["# Ethereum Client debug_traceTransaction Comparison Summary\n\n"]
+    summary_lines.append("This report compares `debug_traceTransaction` outputs across Ethereum execution clients to identify behavioral differences and formatting quirks.\n")
+    summary_lines.append("\n## Overview\n\n")
     summary_lines.append(f"- **Total transactions**: {analysis['summary']['total_comparisons']}\n")
     if analysis["summary"]["skipped_due_to_errors"] > 0:
         summary_lines.append(f"- **Skipped (client errors)**: {analysis['summary']['skipped_due_to_errors']}\n")
     summary_lines.append(f"- **Analyzed**: {analysis['summary']['analyzed_comparisons']}\n")
     summary_lines.append(f"- **Clients**: {', '.join(sorted(all_clients))}\n")
     summary_lines.append("\n---\n")
-    summary_lines.append("\n## Difference Types Found\n")
-    summary_lines.append("\nThese are semantic differences detected in trace outputs. High counts indicate systematic differences in how clients report EVM execution.\n\n")
+    summary_lines.append("\n## Difference Types Found\n\n")
+    summary_lines.append("These are semantic differences detected in trace outputs. High counts indicate systematic differences in how clients report EVM execution.\n\n")
     diff_type_descriptions = {
         "missing_key": "Field present in some clients but not others",
         "value_mismatch": "Same field has different values",
@@ -929,8 +929,8 @@ def main():
         summary_lines.append(f"| {dtype} | {count:,} | {desc} |\n")
 
     summary_lines.append("\n---\n")
-    summary_lines.append("\n## Client Quirk Summary\n")
-    summary_lines.append("\nThis table shows where each client differs from the majority behavior. Lower numbers indicate better conformance.\n\n")
+    summary_lines.append("\n## Client Quirk Summary\n\n")
+    summary_lines.append("This table shows where each client differs from the majority behavior. Lower numbers indicate better conformance.\n\n")
     summary_lines.append("| Client | Missing Keys | Extra Keys | Type Mismatches | Value Mismatches | Gas Diffs | ReturnValue Diffs |\n")
     summary_lines.append("|--------|--------------|------------|-----------------|------------------|-----------|-------------------|\n")
 
@@ -946,8 +946,8 @@ def main():
         summary_lines.append(f"| {client} | {missing:,} | {extra:,} | {type_mm:,} | {value_mm:,} | {gas} | {ret} |\n")
 
     summary_lines.append("\n---\n")
-    summary_lines.append("\n## Per-Client Reports\n")
-    summary_lines.append("\nDetailed reports for each client:\n\n")
+    summary_lines.append("\n## Per-Client Reports\n\n")
+    summary_lines.append("Detailed reports for each client:\n\n")
     for client in sorted(all_clients):
         summary_lines.append(f"- [{client.upper()}](./{client}.md)\n")
 
@@ -968,13 +968,13 @@ def main():
 
     if has_format_quirks:
         summary_lines.append("\n---\n")
-        summary_lines.append("\n## Format Quirks (Not Bugs)\n")
-        summary_lines.append("\nThese are formatting differences that don't affect trace correctness. ")
+        summary_lines.append("\n## Format Quirks (Not Bugs)\n\n")
+        summary_lines.append("These are formatting differences that don't affect trace correctness. ")
         summary_lines.append("The comparison tool normalizes these before semantic comparison.\n\n")
 
         # returnValue encoding
         if rv_by_client:
-            summary_lines.append("### Return Value Encoding\n")
+            summary_lines.append("### Return Value Encoding\n\n")
             summary_lines.append("How empty return values are represented. These are semantically equivalent.\n\n")
             summary_lines.append("| Client | Format | Count |\n|--------|--------|-------|\n")
             for client, encodings in sorted(rv_by_client.items()):
@@ -995,7 +995,7 @@ def main():
 
         # memory format
         if mem_by_client:
-            summary_lines.append("### Memory Format\n")
+            summary_lines.append("### Memory Format\n\n")
             summary_lines.append("How memory words are formatted in structLogs.\n\n")
             summary_lines.append("| Client | Format | Count |\n|--------|--------|-------|\n")
             for client, formats in sorted(mem_by_client.items()):
@@ -1016,7 +1016,7 @@ def main():
 
         # storage format - summarize by client
         if stor_by_client:
-            summary_lines.append("### Storage Format\n")
+            summary_lines.append("### Storage Format\n\n")
             summary_lines.append("How storage keys and values are formatted. Clients differ in zero-padding.\n\n")
             summary_lines.append("| Client | Keys | Values | Observations |\n|--------|------|--------|-------------|\n")
 
@@ -1071,7 +1071,7 @@ def main():
         opt_examples = format_quirks.get("optional_fields", {}).get("examples", {})
 
         if opt_by_client:
-            summary_lines.append("### Optional Fields\n")
+            summary_lines.append("### Optional Fields\n\n")
             summary_lines.append("Fields some clients include that others may omit.\n\n")
 
             field_descriptions = {
@@ -1113,7 +1113,7 @@ def main():
         if ai_error:
             print(f"  AI analysis failed: {ai_error}")
         else:
-            summary_lines.append("\n## AI Analysis\n")
+            summary_lines.append("\n## AI Analysis\n\n")
             summary_lines.append(ai_analysis)
             summary_lines.append("\n")
 
