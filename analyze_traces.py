@@ -528,7 +528,7 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
 
                 lines.append(f"\n**Example {i}** (block {block}, tx `{tx}`, index {ex.get('index')}):\n")
                 lines.append(f"- **Difference**: {diff_desc}\n")
-                lines.append("| Client | Value |\n|--------|-------|\n")
+                lines.append("\n| Client | Value |\n|--------|-------|\n")
                 lines.append(f"| {client} | `{client_val}` |\n")
                 majority_clients = ex['majority_clients']
                 if len(majority_clients) == 1:
@@ -623,7 +623,7 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
                 for i, ex in enumerate(rv_examples[:3], 1):
                     tx_hash = ex['tx_hash']
                     format_quirks_lines.append(f"\n**Example {i}** (block {ex['block']}, tx `{tx_hash}`):\n")
-                    format_quirks_lines.append("| Client | Value |\n|--------|-------|\n")
+                    format_quirks_lines.append("\n| Client | Value |\n|--------|-------|\n")
                     for c, val in sorted(ex.get("values", {}).items()):
                         val_str = "(empty)" if val == "" else (str(val) if val is not None else "null")
                         val_display = f"`{val_str}`"
@@ -647,7 +647,7 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
                 for i, ex in enumerate(mem_examples[:3], 1):
                     tx_hash = ex['tx_hash']
                     format_quirks_lines.append(f"\n**Example {i}** (block {ex['block']}, tx `{tx_hash}`):\n")
-                    format_quirks_lines.append("| Client | Value |\n|--------|-------|\n")
+                    format_quirks_lines.append("\n| Client | Value |\n|--------|-------|\n")
                     for c, val in sorted(ex.get("values", {}).items()):
                         val_str = "(empty)" if val == "" else (str(val) if val is not None else "null")
                         val_display = f"`{val_str}`"
@@ -697,7 +697,7 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
                 for i, ex in enumerate(stor_examples[:3], 1):
                     tx_hash = ex['tx_hash']
                     format_quirks_lines.append(f"\n**Example {i}** (block {ex['block']}, tx `{tx_hash}`):\n")
-                    format_quirks_lines.append("| Client | Key | Value |\n|--------|-----|-------|\n")
+                    format_quirks_lines.append("\n| Client | Key | Value |\n|--------|-----|-------|\n")
                     for c, data in sorted(ex.get("values", {}).items()):
                         if data and isinstance(data, dict):
                             key_str = str(data.get("key", "")) or "(empty)"
@@ -734,7 +734,7 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
                 if field in opt_examples and opt_examples[field]:
                     for i, ex in enumerate(opt_examples[field][:3], 1):
                         format_quirks_lines.append(f"**Example {i}** (block {ex['block']}, tx `{ex['tx_hash']}`):\n")
-                        format_quirks_lines.append("| Client | Value |\n|--------|-------|\n")
+                        format_quirks_lines.append("\n| Client | Value |\n|--------|-------|\n")
                         for c, val in sorted(ex.get("client_values", {}).items()):
                             format_quirks_lines.append(f"| {c} | `{val}` |\n")
                         format_quirks_lines.append("\n")
@@ -986,7 +986,7 @@ def main():
                 for i, ex in enumerate(rv_examples[:1], 1):
                     tx_hash = ex['tx_hash']
                     summary_lines.append(f"\n**Example** (block {ex['block']}, tx `{tx_hash}`):\n")
-                    summary_lines.append("| Client | Value |\n|--------|-------|\n")
+                    summary_lines.append("\n| Client | Value |\n|--------|-------|\n")
                     for c, val in sorted(ex.get("values", {}).items()):
                         val_str = "(empty)" if val == "" else (str(val) if val is not None else "null")
                         val_display = f"`{val_str}`"
@@ -1007,7 +1007,7 @@ def main():
                 for i, ex in enumerate(mem_examples[:1], 1):
                     tx_hash = ex['tx_hash']
                     summary_lines.append(f"\n**Example** (block {ex['block']}, tx `{tx_hash}`):\n")
-                    summary_lines.append("| Client | Value |\n|--------|-------|\n")
+                    summary_lines.append("\n| Client | Value |\n|--------|-------|\n")
                     for c, val in sorted(ex.get("values", {}).items()):
                         val_str = "(empty)" if val == "" else (str(val) if val is not None else "null")
                         val_display = f"`{val_str}`"
@@ -1056,7 +1056,7 @@ def main():
                 for i, ex in enumerate(stor_examples[:1], 1):
                     tx_hash = ex['tx_hash']
                     summary_lines.append(f"\n**Example** (block {ex['block']}, tx `{tx_hash}`):\n")
-                    summary_lines.append("| Client | Key | Value |\n|--------|-----|-------|\n")
+                    summary_lines.append("\n| Client | Key | Value |\n|--------|-----|-------|\n")
                     for c, data in sorted(ex.get("values", {}).items()):
                         if data and isinstance(data, dict):
                             key_str = str(data.get("key", "")) or "(empty)"
@@ -1094,7 +1094,7 @@ def main():
                         summary_lines.append(f"\n**`{field}` example:**\n")
                         for i, ex in enumerate(examples[:1], 1):
                             summary_lines.append(f"\n*Example* (block {ex['block']}, tx `{ex['tx_hash']}`):\n")
-                            summary_lines.append("| Client | Value |\n|--------|-------|\n")
+                            summary_lines.append("\n| Client | Value |\n|--------|-------|\n")
                             for c, val in sorted(ex.get("client_values", {}).items()):
                                 summary_lines.append(f"| {c} | `{val}` |\n")
             summary_lines.append("\n")
