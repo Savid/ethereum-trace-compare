@@ -1,0 +1,6 @@
+# Required
+requests>=2.32.0
+
+# Optional - for AI analysis feature
+anyio>=4.8.0
+claude-agent-sdk>=0.1.0
