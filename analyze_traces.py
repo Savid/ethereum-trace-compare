@@ -11,6 +11,8 @@ def format_value(val, max_len=100):
     """Format a value for display, truncating if necessary."""
     if val is None:
         return "None"
+    if isinstance(val, str) and val == "":
+        return "(empty)"
     if isinstance(val, dict):
         s = json.dumps(val, sort_keys=True)
     elif isinstance(val, list):
@@ -623,7 +625,7 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
                     format_quirks_lines.append(f"\n**Example {i}** (block {ex['block']}, tx `{tx_hash}`):\n")
                     format_quirks_lines.append("| Client | Value |\n|--------|-------|\n")
                     for c, val in sorted(ex.get("values", {}).items()):
-                        val_str = str(val) if val is not None else "null"
+                        val_str = "(empty)" if val == "" else (str(val) if val is not None else "null")
                         val_display = f"`{val_str}`"
                         format_quirks_lines.append(f"| {c} | {val_display} |\n")
             format_quirks_lines.append("\n")
@@ -647,7 +649,7 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
                     format_quirks_lines.append(f"\n**Example {i}** (block {ex['block']}, tx `{tx_hash}`):\n")
                     format_quirks_lines.append("| Client | Value |\n|--------|-------|\n")
                     for c, val in sorted(ex.get("values", {}).items()):
-                        val_str = str(val) if val is not None else "null"
+                        val_str = "(empty)" if val == "" else (str(val) if val is not None else "null")
                         val_display = f"`{val_str}`"
                         format_quirks_lines.append(f"| {c} | {val_display} |\n")
             format_quirks_lines.append("\n")
@@ -698,8 +700,8 @@ def generate_client_report(client: str, quirks: dict, all_clients: list[str],
                     format_quirks_lines.append("| Client | Key | Value |\n|--------|-----|-------|\n")
                     for c, data in sorted(ex.get("values", {}).items()):
                         if data and isinstance(data, dict):
-                            key_str = str(data.get("key", ""))
-                            val_str = str(data.get("value", ""))
+                            key_str = str(data.get("key", "")) or "(empty)"
+                            val_str = str(data.get("value", "")) or "(empty)"
                             key_display = f"`{key_str}`"
                             val_display = f"`{val_str}`"
                             format_quirks_lines.append(f"| {c} | {key_display} | {val_display} |\n")
@@ -986,7 +988,7 @@ def main():
                     summary_lines.append(f"\n**Example** (block {ex['block']}, tx `{tx_hash}`):\n")
                     summary_lines.append("| Client | Value |\n|--------|-------|\n")
                     for c, val in sorted(ex.get("values", {}).items()):
-                        val_str = str(val) if val is not None else "null"
+                        val_str = "(empty)" if val == "" else (str(val) if val is not None else "null")
                         val_display = f"`{val_str}`"
                         summary_lines.append(f"| {c} | {val_display} |\n")
             summary_lines.append("\n")
@@ -1007,7 +1009,7 @@ def main():
                     summary_lines.append(f"\n**Example** (block {ex['block']}, tx `{tx_hash}`):\n")
                     summary_lines.append("| Client | Value |\n|--------|-------|\n")
                     for c, val in sorted(ex.get("values", {}).items()):
-                        val_str = str(val) if val is not None else "null"
+                        val_str = "(empty)" if val == "" else (str(val) if val is not None else "null")
                         val_display = f"`{val_str}`"
                         summary_lines.append(f"| {c} | {val_display} |\n")
             summary_lines.append("\n")
@@ -1057,8 +1059,8 @@ def main():
                     summary_lines.append("| Client | Key | Value |\n|--------|-----|-------|\n")
                     for c, data in sorted(ex.get("values", {}).items()):
                         if data and isinstance(data, dict):
-                            key_str = str(data.get("key", ""))
-                            val_str = str(data.get("value", ""))
+                            key_str = str(data.get("key", "")) or "(empty)"
+                            val_str = str(data.get("value", "")) or "(empty)"
                             key_display = f"`{key_str}`"
                             val_display = f"`{val_str}`"
                             summary_lines.append(f"| {c} | {key_display} | {val_display} |\n")
